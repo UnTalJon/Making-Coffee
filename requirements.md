@@ -1,49 +1,114 @@
-# Ingredient calculator
+# Coffee for all
 
 ## Description
 
-Now let's consider a case when you need a lot of coffee. Maybe you're hosting a party with a lot of guests! In these
-circumstances, it's better to make preparations in advance.
+A real coffee machine doesn't have an infinite supply of water, milk, or coffee beans. And if you input a really big
+number, it's almost certain that a real coffee machine wouldn't have the supplies needed to make all that coffee for
+you.
 
-So, we will ask a user to enter the desired amount of coffee, in cups. Given this, you can adjust the program by
-calculating how much water, coffee, and milk are necessary to make the specified amount of coffee.
-
-Of course, all this coffee is not needed right now, so at this stage, the coffee machine doesn't actually make any
-coffee yet.
+In this stage, you need to improve the previous program. Now you will check amounts of water, milk, and coffee beans
+available in your coffee machine at the moment.
 
 ## Objectives
 
-Let's break the task into several steps:
+Write a program that does the following:
 
-1. First, read the numbers of coffee drinks from the input.
+1. It requests the amounts of water, milk, and coffee beans available at the moment, and then asks for the number of
+   cups a user needs.
+2. If the coffee machine has enough supplies to make the specified amount of coffee, the program should print "Yes,
+   I can make that amount of coffee".
+3. If the coffee machine can make more than that, the program should output "Yes, I can make that amount of coffee (
+   and even N more than that)", where N is the number of additional cups of coffee that the coffee machine can make.
+4. If the amount of given resources is not enough to make the specified amount of coffee, the program should
+   output "No, I can make only N cups of coffee".
 
-2. Figure out how much of each ingredient the machine will need. Note that one cup of coffee made on this coffee machine
-   contains 200 ml of water, 50 ml of milk, and 15 g of coffee beans.
-
-3. Output the required ingredient amounts back to the user.
+Like in the previous stage, the coffee machine needs 200 ml of water, 50 ml of milk, and 15 g of coffee beans to make
+one cup of coffee.
 
 ## Examples
 
-The greater-than symbol followed by a space (```>``` ) represents the user input. Note that it's not part of the input.
+The greater-than symbol followed by a space (> ) represents the user input. Note that it's not part of the input.
 
-### Example 1: a dialogue with a user might look like this
+### Example 1:
 
 ```shell
+Write how many ml of water the coffee machine has:
+> 300
+Write how many ml of milk the coffee machine has:
+> 65
+Write how many grams of coffee beans the coffee machine has:
+> 100
 Write how many cups of coffee you will need:
-> 25
-For 25 cups of coffee you will need:
-5000 ml of water
-1250 ml of milk
-375 g of coffee beans
+> 1
+Yes, I can make that amount of coffee
 ```
 
-### Example 2: here is another dialogue
+### Example 2:
 
 ```shell
+Write how many ml of water the coffee machine has:
+> 500
+Write how many ml of milk the coffee machine has:
+> 250
+Write how many grams of coffee beans the coffee machine has:
+> 200
 Write how many cups of coffee you will need:
-> 125
-For 125 cups of coffee you will need:
-25000 ml of water
-6250 ml of milk
-1875 g of coffee beans
+> 10
+No, I can make only 2 cups of coffee
+```
+
+### Example 3:
+
+```shell
+Write how many ml of water the coffee machine has:
+> 1550
+Write how many ml of milk the coffee machine has:
+> 299
+Write how many grams of coffee beans the coffee machine has:
+> 300
+Write how many cups of coffee you will need:
+> 3
+Yes, I can make that amount of coffee (and even 2 more than that)
+```
+
+### Example 4:
+
+```
+Write how many ml of water the coffee machine has:
+> 0
+Write how many ml of milk the coffee machine has:
+> 0
+Write how many grams of coffee beans the coffee machine has:
+> 0
+Write how many cups of coffee you will need:
+> 1
+No, I can make only 0 cups of coffee
+```
+
+### Example 5:
+
+```shell
+Write how many ml of water the coffee machine has:
+> 0
+Write how many ml of milk the coffee machine has:
+> 0
+Write how many grams of coffee beans the coffee machine has:
+> 0
+Write how many cups of coffee you will need:
+> 0
+Yes, I can make that amount of coffee
+```
+
+### Example 6:
+
+```shell
+Write how many ml of water the coffee machine has:
+> 200
+Write how many ml of milk the coffee machine has:
+> 50
+Write how many grams of coffee beans the coffee machine has:
+> 15
+Write how many cups of coffee you will need:
+> 0
+Yes, I can make that amount of coffee (and even 1 more than that)
 ```
