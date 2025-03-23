@@ -1,20 +1,36 @@
-import {CoffeeMachine} from './CoffeeMachine.js'
+import {CoffeeMachine} from "./CoffeeMachine.js";
+import {MenuOption} from "./MenuOption.js";
 
 main()
 
 function main() {
-    const coffeeMachine = new CoffeeMachine();
-    let coffeeCups = 0;
 
-    setIngredientsAmount()
-    coffeeMachine.calculateTotalCoffeCups(coffeeCups)
+    const coffeeMachine = new CoffeeMachine(550, 400, 540, 120, 9);
 
-    function setIngredientsAmount() {
-        coffeeMachine.setWater(Number(prompt("Write how many ml of water the coffee machine has:\n")));
-        coffeeMachine.setMilk(Number(prompt("Write how many ml of milk the coffee machine has:\n")))
-        coffeeMachine.setCoffee(Number(prompt("Write how many grams of coffee beans the coffee machine has:\n")))
+    coffeeMachine.printCurrentState();
+    printMainMenu(coffeeMachine);
+    coffeeMachine.printCurrentState();
 
-        coffeeCups = Number(prompt("Write how many cups of coffee you will need:\n"));
+
+    /**
+     * @param {CoffeeMachine} coffeeMachine - Instante of a coffee machine to apply the menu options.
+     */
+    function printMainMenu(coffeeMachine) {
+        const choice = prompt('\nWrite action (buy, fill, take):\n');
+
+        switch (choice) {
+            case MenuOption.BUY:
+                coffeeMachine.buyCoffee();
+                break;
+            case MenuOption.FILL:
+                coffeeMachine.fillMachine();
+                break;
+            case MenuOption.TAKE:
+                coffeeMachine.takeMoney();
+                break;
+            default:
+                break;
+        }
     }
 }
 
