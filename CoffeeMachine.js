@@ -1,23 +1,37 @@
 import {Coffee} from "./Coffee.js";
 import {CoffeeType} from "./CoffeeType.js";
 import {MenuOption} from "./MenuOption.js";
+import {Resource} from "./Resource.js";
 
 export class CoffeeMachine {
     constructor(water, milk, coffee, disposableCups, cash) {
-        this.machine = new Coffee(water, milk, coffee, disposableCups, cash)
+        this.water = new Resource('Water', water, 'ml');
+        this.milk = new Resource('Milk', milk, 'ml');
+        this.coffee = new Resource('Coffee beans', coffee, 'g');
+        this.disposableCups = new Resource('Disposable cups', disposableCups, 'units');
+        this.cash = new Resource('Cash', cash, 'dollars', false);
+
         this.availableRecipes = new Map([
             [CoffeeType.ESPRESSO, new Coffee(250, 0, 16, 1, -4)],
             [CoffeeType.LATTE, new Coffee(350, 75, 20, 1, -7)],
             [CoffeeType.CAPPUCCINO, new Coffee(200, 100, 12, 1, -6)],
+            [CoffeeType.AMERICANO, new Coffee(375, 0, 20, 1, -5)],
+            [CoffeeType.MOCHA, new Coffee(250, 100, 18, 1, -8)],
+            [CoffeeType.MACCHIATO, new Coffee(250, 50, 17, 1, -6)],
+            [CoffeeType.FLAT_WHITE, new Coffee(200, 150, 15, 1, -7)],
+            [CoffeeType.RISTRETTO, new Coffee(150, 0, 20, 1, -5)],
+            [CoffeeType.AFFOGATO, new Coffee(50, 0, 10, 1, -9)],
+            [CoffeeType.CORTADO, new Coffee(150, 50, 15, 1, -5)],
         ]);
     }
 
+    clone = () =>
+        new CoffeeMachine(this.water.quantity, this.milk.quantity, this.coffee.quantity, this.disposableCups.quantity, this.cash.quantity);
+
     startMachine() {
         let choice = MenuOption.UNDETERMINED;
-
         do {
-            choice = prompt('\nWrite action (buy, fill, take, remaining, exit):\n');
-
+            choice = prompt('\nWrite action (buy, fill, take, remaining, exit):\n>');
             switch (choice) {
                 case MenuOption.BUY:
                     this.buyCoffee();
@@ -39,30 +53,65 @@ export class CoffeeMachine {
 
     printRemainingResources() {
         console.log('\nThe coffee machine has:');
-        console.log(`${this.machine.water} ml of water`);
-        console.log(`${this.machine.milk} ml of milk`);
-        console.log(`${this.machine.coffee} g of coffee beans`);
-        console.log(`${this.machine.cups} disposable cups`);
-        console.log(`$${this.machine.cost} of money\n`);
+
+        for (const property in this) {
+            if (this[property] instanceof Resource) {
+                this[property].printRemainingQuantity();
+            }
+        }
     }
 
     buyCoffee() {
-        const menu = 'What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu\n'
-        const choice = Number(prompt(menu));
+        let choice = MenuOption.UNDETERMINED
+        while (choice !== MenuOption.BACK) {
+            let index = 1;
 
-        switch (choice) {
-            case 1:
-                this.makeCoffee(CoffeeType.ESPRESSO)
-                break;
-            case 2:
-                this.makeCoffee(CoffeeType.LATTE)
-                break;
-            case 3:
-                this.makeCoffee(CoffeeType.CAPPUCCINO)
-                break;
-            // NaN or 'back' case
-            default:
-                break;
+            console.log('\nWhat do you want to buy?');
+            for (const coffeeName of this.availableRecipes.keys()) {
+                console.log(`${index} - ${coffeeName}`)
+                index++;
+            }
+            console.log('back - main menu');
+
+            choice = prompt('>');
+            switch (choice) {
+                case '1':
+                    this.makeCoffee(CoffeeType.ESPRESSO)
+                    return;
+                case '2':
+                    this.makeCoffee(CoffeeType.LATTE)
+                    return;
+                case '3':
+                    this.makeCoffee(CoffeeType.CAPPUCCINO)
+                    return;
+                case '4':
+                    this.makeCoffee(CoffeeType.AMERICANO)
+                    return;
+                case '5':
+                    this.makeCoffee(CoffeeType.MOCHA)
+                    return;
+                case '6':
+                    this.makeCoffee(CoffeeType.MACCHIATO)
+                    return;
+                case '7':
+                    this.makeCoffee(CoffeeType.FLAT_WHITE)
+                    return;
+                case '8':
+                    this.makeCoffee(CoffeeType.RISTRETTO)
+                    return;
+                case '9':
+                    this.makeCoffee(CoffeeType.AFFOGATO)
+                    return;
+                case '10':
+                    this.makeCoffee(CoffeeType.CORTADO)
+                    return;
+                case MenuOption.BACK:
+                    console.log('Returning to the main menu');
+                    break;
+                default:
+                    console.log('Invalid choice!');
+                    break;
+            }
         }
     }
 
@@ -70,41 +119,41 @@ export class CoffeeMachine {
      * @param {CoffeeType} coffeeType - Coffee which we'll prepared
      */
     makeCoffee(coffeeType) {
-        const coffee = this.availableRecipes.get(coffeeType);
+        if (!this.canMakeCoffee(coffeeType)) return;
+        const recipe = this.availableRecipes.get(coffeeType);
 
-        /** Check all ingredients before use them in the machine */
-        for (const key in this.machine) {
-            let ingredient = this.machine[key]
-            const remainingResource = ingredient -= coffee[key];
-
-            if (remainingResource < 0) {
-                console.log(`Sorry, not enough ${key}!`);
-                return;
-            }
-        }
-
-        /** If we have enough ingredients we make a coffe :) */
-        for (const key in this.machine) {
-            this.machine[key] -= coffee[key];
-        }
+        this.water.use(recipe.water);
+        this.milk.use(recipe.milk);
+        this.coffee.use(recipe.coffee);
+        this.disposableCups.use(recipe.cups);
+        this.cash.use(recipe.cost);
 
         console.log('I have enough resources, making you a coffee!');
     }
 
-    fillMachine() {
-        const water = Number(prompt('Write how many ml of water you want to add:\n'));
-        const milk = Number(prompt('Write how many ml of milk you want to add:\n'));
-        const coffee = Number(prompt('Write how many grams of coffee beans you want to add:\n'));
-        const cups = Number(prompt('Write how many disposable cups you want to add:\n'));
+    /**
+     * @param {CoffeeType} coffeeType - Coffee which we'll prepared
+     */
+    canMakeCoffee(coffeeType) {
+        const recipe = this.availableRecipes.get(coffeeType);
+        const clonedMachine = this.clone();
 
-        this.machine.water += water;
-        this.machine.milk += milk;
-        this.machine.coffee += coffee;
-        this.machine.cups += cups;
+        if (!clonedMachine.water.use(recipe.water)) return false;
+        if (!clonedMachine.milk.use(recipe.milk)) return false;
+        if (!clonedMachine.coffee.use(recipe.coffee)) return false;
+        return clonedMachine.disposableCups.use(recipe.cups);
+    }
+
+    fillMachine() {
+        for (const property in this) {
+            if (this[property] instanceof Resource && this[property].fillable) {
+                this[property].add();
+            }
+        }
     }
 
     takeMoney() {
-        console.log(`\nI gave you $${this.machine.cost}`);
-        this.machine.cost = 0;
+        console.log(`\nI gave you $${this.cash.quantity}`);
+        this.cash.resetQuantity();
     }
 }

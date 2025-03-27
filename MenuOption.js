@@ -4,5 +4,6 @@ export const MenuOption = {
     TAKE: 'take',
     REMAINING: 'remaining',
     EXIT: 'exit',
+    BACK: 'back',
     UNDETERMINED: 'undetermined'
 }
