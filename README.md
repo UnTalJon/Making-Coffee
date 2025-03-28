@@ -13,3 +13,5 @@ bun run index.ts
 ```
 
 This project was created using `bun init` in bun v1.2.3. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+
+You can also read the ``requirements.md`` file and switch the branch. The file is different in all cases.
